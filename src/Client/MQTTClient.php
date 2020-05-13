@@ -166,7 +166,7 @@ class MQTTClient
         $connectRequest->setClientID($connection->getClientID());
         $connectRequest->setKeepAlive($connection->getKeepAlive());
         $connectRequest->setPassword($connection->getPassword());
-        $connectRequest->setProtocolLevel($connection->getProtocolLevel());
+        $connectRequest->setProtocolLevel($connection->getProtocol());
         $connectRequest->setUsername($connection->getUsername());
         $will = $connection->getWill();
         if($will)
