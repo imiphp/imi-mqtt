@@ -182,6 +182,7 @@ $client = new MQTTClient([
     'host'          =>  '127.0.0.1',
     'port'          =>  8081,
 ], new TestClientListener);
+$client->wait(); // 开始循环接收，直到关闭连接
 ```
 
 **客户端参数表：**
