@@ -43,6 +43,18 @@ class TestClientListener implements IMQTTClientListener
     }
 
     /**
+     * 发布
+     *
+     * @param \Imi\MQTT\Client\MQTTClient $client
+     * @param \BinSoul\Net\Mqtt\Packet\PublishRequestPacket $packet
+     * @return void
+     */
+    public function publish(\Imi\MQTT\Client\MQTTClient $client, \BinSoul\Net\Mqtt\Packet\PublishRequestPacket $packet)
+    {
+        $this->publishResults[$packet->getPacketType()] = $packet;
+    }
+
+    /**
      * 发布确认
      *
      * @param \Imi\MQTT\Client\MQTTClient $client
@@ -176,4 +188,5 @@ class TestClientListener implements IMQTTClientListener
     {
         return $this->publishResults;
     }
+
 }

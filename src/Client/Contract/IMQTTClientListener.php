@@ -16,6 +16,15 @@ interface IMQTTClientListener
     public function connectACK(\Imi\MQTT\Client\MQTTClient $client, \BinSoul\Net\Mqtt\Packet\ConnectResponsePacket $packet);
 
     /**
+     * 发布
+     *
+     * @param \Imi\MQTT\Client\MQTTClient $client
+     * @param \BinSoul\Net\Mqtt\Packet\PublishRequestPacket $packet
+     * @return void
+     */
+    public function publish(\Imi\MQTT\Client\MQTTClient $client, \BinSoul\Net\Mqtt\Packet\PublishRequestPacket $packet);
+
+    /**
      * 发布确认
      *
      * @param \Imi\MQTT\Client\MQTTClient $client

@@ -17,6 +17,7 @@ use BinSoul\Net\Mqtt\Packet\DisconnectRequestPacket;
 use BinSoul\Net\Mqtt\Packet\SubscribeResponsePacket;
 use BinSoul\Net\Mqtt\Packet\UnsubscribeRequestPacket;
 use BinSoul\Net\Mqtt\Packet\UnsubscribeResponsePacket;
+use Imi\Server\Server;
 
 class MQTTController extends BaseMQTTController
 {
@@ -106,6 +107,12 @@ class MQTTController extends BaseMQTTController
         $response = new SubscribeResponsePacket;
         $response->setIdentifier($request->getIdentifier());
         $response->setReturnCodes([0]);
+
+        $publishData = new PublishRequestPacket;
+        $publishData->setPayload('test');
+        $publishData->setTopic('a');
+        Server::send($publishData, $receiveData->getFd());
+
         return $response;
     }
 

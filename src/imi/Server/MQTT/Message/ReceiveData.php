@@ -2,7 +2,9 @@
 namespace Imi\Server\MQTT\Message;
 
 use Imi\App;
+use Imi\RequestContext;
 use BinSoul\Net\Mqtt\PacketStream;
+use Imi\Server\DataParser\DataParser;
 use Imi\Server\MQTT\Exception\InvalidReceiveData;
 
 class ReceiveData implements IReceiveData
@@ -38,15 +40,7 @@ class ReceiveData implements IReceiveData
         $this->fd = $fd;
         $this->reactorID = $reactorID;
         $this->data = $data;
-        /** @var \BinSoul\Net\Mqtt\DefaultPacketFactory $packetFactory */
-        $packetFactory = App::getBean(\BinSoul\Net\Mqtt\DefaultPacketFactory::class);
-        if(!isset($data[0]))
-        {
-            throw new InvalidReceiveData;
-        }
-        $type = ord($data[0]) >> 4;
-        $this->formatData = $packet = $packetFactory->build($type);
-        $packet->read(new PacketStream($data));
+        $this->formatData = RequestContext::getServerBean(DataParser::class)->decode($data);
     }
 
     /**
@@ -85,4 +79,5 @@ class ReceiveData implements IReceiveData
     {
         return $this->reactorID;
     }
+
 }

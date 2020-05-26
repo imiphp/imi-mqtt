@@ -43,6 +43,7 @@ class MQTTTest extends BaseTest
         $r = $listener->getPublishResults();
         $this->assertNotNull($r);
         $result = [
+            Packet::TYPE_PUBLISH    =>  false,
             Packet::TYPE_PUBACK     =>  false,
             Packet::TYPE_PUBREC     =>  false,
             Packet::TYPE_PUBREL     =>  false,
@@ -54,6 +55,7 @@ class MQTTTest extends BaseTest
             $result[$item->getPacketType()] = true;
         }
         $this->assertEquals([
+            Packet::TYPE_PUBLISH    =>  true,
             Packet::TYPE_PUBACK     =>  true,
             Packet::TYPE_PUBREC     =>  true,
             Packet::TYPE_PUBREL     =>  true,

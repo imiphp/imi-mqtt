@@ -4,7 +4,7 @@ namespace Imi\Server\MQTT\Listener;
 use Imi\Worker;
 use Imi\RequestContext;
 use BinSoul\Net\Mqtt\Packet;
-use BinSoul\Net\Mqtt\PacketStream;
+use Imi\Server\DataParser\DataParser;
 use Imi\Server\MQTT\Message\ReceiveData;
 use Imi\Bean\Annotation\ClassEventListener;
 use Imi\Server\Event\Param\ReceiveEventParam;
@@ -72,11 +72,9 @@ class BeforeReceive extends \Imi\Server\TcpServer\Listener\BeforeReceive
             throw new \RuntimeException(sprintf('Unsupport MQTT packet type %s', $packet->getPacketType()));
         }
         $response = $controllerInstance->$methodName($packet, $data);
-        if($response instanceof Packet)
+        if($response)
         {
-            $packageStream = new PacketStream;
-            $response->write($packageStream);
-            $server->getSwooleServer()->send($fd, $packageStream->getData());
+            $server->getSwooleServer()->send($fd, $server->getBean(DataParser::class)->encode($response));
         }
     }
 
