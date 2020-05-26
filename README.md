@@ -39,6 +39,14 @@ MQTT是一个基于客户端-服务器的消息发布/订阅传输协议。MQTT�
 ]
 ```
 
+### MQTT 通讯数据包类
+
+`imi-mqtt` 基于 `binsoul/net-mqtt` 开发，使用的都是这个包中的数据包结构类。
+
+类名一般是`BinSoul\Net\Mqtt\Packet\XXX`
+
+如：`\BinSoul\Net\Mqtt\Packet\SubscribeRequestPacket`
+
 ### MQTT 服务开发
 
 首先，服务器配置的`type`设为`MQTT`，并且定义好控制器。
@@ -72,6 +80,10 @@ MQTT是一个基于客户端-服务器的消息发布/订阅传输协议。MQTT�
 ],
 ```
 
+在控制器方法中返回一个包对象，代表响应当前请求。
+
+同样支持`\Imi\Server\Server::send()`等方法，详见：<https://doc.imiphp.com/utils/Server.html>
+
 ### MQTT 客户端开发
 
 **事件监听类：**
@@ -92,6 +104,17 @@ class TestClientListener implements IMQTTClientListener
      * @return void
      */
     public function connectACK(\Imi\MQTT\Client\MQTTClient $client, \BinSoul\Net\Mqtt\Packet\ConnectResponsePacket $packet)
+    {
+    }
+
+    /**
+     * 发布
+     *
+     * @param \Imi\MQTT\Client\MQTTClient $client
+     * @param \BinSoul\Net\Mqtt\Packet\PublishRequestPacket $packet
+     * @return void
+     */
+    public function publish(\Imi\MQTT\Client\MQTTClient $client, \BinSoul\Net\Mqtt\Packet\PublishRequestPacket $packet)
     {
     }
 
