@@ -9,30 +9,50 @@ class MQTTTest extends BaseTest
 {
     public function testMQTT()
     {
-        $listener = new TestClientListener;
-        $initChannel = new Channel(1);
-        $client = new MQTTClient([
+        $this->privateTest([
             'host'          =>  '127.0.0.1',
             'port'          =>  8081,
+            'timeout'       =>  60,
             'pingTimespan'  =>  3,
             'username'      =>  'root',
             'password'      =>  '123456',
-        ], $listener);
+        ]);
+    }
+
+    public function testMQTTS()
+    {
+        $this->privateTest([
+            'host'                  =>  '127.0.0.1',
+            'port'                  =>  8082,
+            'timeout'               =>  60,
+            'pingTimespan'          =>  3,
+            'username'              =>  'root',
+            'password'              =>  '123456',
+            'ssl'                   =>  true,
+            'sslAllowSelfSigned'    =>  true,
+        ]);
+    }
+
+    private function privateTest($config)
+    {
+        $listener = new TestClientListener;
+        $initChannel = new Channel(1);
+        $client = new MQTTClient($config, $listener);
         go(function() use($initChannel, $client){
             $this->assertTrue($client->connect());
             $initChannel->push(1);
             $client->wait();
             $initChannel->push(2);
         });
-        $this->assertEquals(1, $initChannel->pop(3));
-        $client->ping();
-        $client->publish('a', 'a');
-        $client->publish('b', 'b');
-        $client->publish('c', 'c');
-        $client->publish('d', 'd');
-        $client->subscribe('a', 0);
-        $client->unsubscribe(['a']);
-        $this->assertEquals(2, $initChannel->pop(3));
+        $this->assertEquals(1, $initChannel->pop(5));
+        $this->assertNotFalse($client->ping());
+        $this->assertNotFalse($client->publish('a', 'a'));
+        $this->assertNotFalse($client->publish('b', 'b'));
+        $this->assertNotFalse($client->publish('c', 'c'));
+        $this->assertNotFalse($client->publish('d', 'd'));
+        $this->assertNotFalse($client->subscribe('a', 0));
+        $this->assertNotFalse($client->unsubscribe(['a']));
+        $this->assertEquals(2, $initChannel->pop(5));
         
         // connectACK
         $r = $listener->getConnectACKResult();
@@ -74,7 +94,5 @@ class MQTTTest extends BaseTest
         // ping
         $r = $listener->getPingResult();
         $this->assertNotNull($r);
-
     }
-
 }

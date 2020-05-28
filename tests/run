@@ -26,8 +26,14 @@ function startServer()
                 $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
                 if($sock && socket_set_option($sock, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 1, 'usec' => 0)) && @socket_connect($sock, '127.0.0.1', 8081))
                 {
-                    $serverStarted = true;
-                    break;
+                    sleep(1);
+                    $write = [$sock];
+                    $read = $except = null;
+                    if(socket_select($read, $write, $except, 1))
+                    {
+                        $serverStarted = true;
+                        break;
+                    }
                 }
             } finally {
                 socket_close($sock);

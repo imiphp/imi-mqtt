@@ -101,12 +101,39 @@ class MQTTClient
         {
             $will = null;
         }
-        $this->connection = new Connection($config['host'], $config['port'], $config['timeout'] ?? null, $config['pingTimespan'] ?? null, $config['username'] ?? '', $config['password'] ?? '', $will, $config['clientId'] ?? '', $config['keepAlive'] ?? 60, $config['protocol'] ?? 4, $config['clean'] ?? true);
-        // Swoole 客户端对象
-        $this->client = $client = new Client(SWOOLE_SOCK_TCP);
-        $client->set([
+        $connection = (new Connection($config['host'], $config['port'], $config['timeout'] ?? null, $config['pingTimespan'] ?? null, $config['username'] ?? '', $config['password'] ?? '', $will, $config['clientId'] ?? '', $config['keepAlive'] ?? 60, $config['protocol'] ?? 4, $config['clean'] ?? true))
+            ->withSsl($config['ssl'] ?? false)
+            ->withSslCertFile($config['sslCertFile'] ?? null)
+            ->withSslKeyFile($config['sslKeyFile'] ?? null)
+            ->withSslVerifyPeer($config['sslVerifyPeer'] ?? true)
+            ->withSslAllowSelfSigned($config['sslAllowSelfSigned'] ?? false)
+            ->withSslHostName($config['sslHostName'] ?? null)
+            ->withSslCafile($config['sslCafile'] ?? null)
+            ->withSslCapath($config['sslCapath'] ?? null)
+            ;
+
+        $this->connection = $connection;
+        $option = [
             'open_mqtt_protocol'    =>  true,
-        ]);
+        ];
+        if($connection->getSsl())
+        {
+            $type = SWOOLE_SOCK_TCP | SWOOLE_SSL;
+            $option['ssl_cert_file'] = $connection->getSslCertFile();
+            $option['ssl_key_file'] = $connection->getSslKeyFile();
+            $option['ssl_verify_peer'] = $connection->getSslVerifyPeer();
+            $option['ssl_allow_self_signed'] = $connection->getSslAllowSelfSigned();
+            $option['ssl_host_name'] = $connection->getSslHostName();
+            $option['ssl_ca_file'] = $connection->getSslCafile();
+            $option['ssl_ca_path'] = $connection->getSslCapath();
+        }
+        else
+        {
+            $type = SWOOLE_SOCK_TCP;
+        }
+        // Swoole 客户端对象
+        $this->client = $client = new Client($type);
+        $client->set($option);
     }
 
     public function __destruct()

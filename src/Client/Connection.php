@@ -38,6 +38,62 @@ class Connection extends DefaultConnection
     private $pingTimespan;
 
     /**
+     * 使用 SSL 连接
+     *
+     * @var bool
+     */
+    private $ssl = false;
+
+    /**
+     * 证书文件
+     *
+     * @var string|null
+     */
+    private $sslCertFile;
+
+    /**
+     * 证书密钥文件
+     *
+     * @var string|null
+     */
+    private $sslKeyFile;
+
+    /**
+     * 验证服务器端证书。
+     *
+     * @var bool
+     */
+    private $sslVerifyPeer = true;
+
+    /**
+     * 允许自签名证书
+     *
+     * @var bool
+     */
+    private $sslAllowSelfSigned = false;
+
+    /**
+     * 服务器主机名称
+     *
+     * @var string|null
+     */
+    private $sslHostName;
+
+    /**
+     * CA 证书
+     *
+     * @var string|null
+     */
+    private $sslCafile;
+
+    /**
+     * 证书目录
+     *
+     * @var string|null
+     */
+    private $sslCapath;
+
+    /**
      * Constructs an instance of this class.
      */
     public function __construct(
@@ -156,6 +212,206 @@ class Connection extends DefaultConnection
     {
         $result = clone $this;
         $result->pingTimespan = $pingTimespan;
+
+        return $result;
+    }
+
+    /**
+     * Get 使用 SSL 连接
+     *
+     * @return bool
+     */ 
+    public function getSsl()
+    {
+        return $this->ssl;
+    }
+
+    /**
+     * With 使用 SSL 连接
+     *
+     * @param bool $ssl  使用 SSL 连接
+     *
+     * @return self
+     */ 
+    public function withSsl(bool $ssl)
+    {
+        $result = clone $this;
+        $result->ssl = $ssl;
+
+        return $result;
+    }
+
+    /**
+     * Get 证书文件
+     *
+     * @return string|null
+     */ 
+    public function getSslCertFile()
+    {
+        return $this->sslCertFile;
+    }
+
+    /**
+     * With 证书文件
+     *
+     * @param string|null $sslCertFile  证书文件
+     *
+     * @return self
+     */ 
+    public function withSslCertFile($sslCertFile)
+    {
+        $result = clone $this;
+        $result->sslCertFile = $sslCertFile;
+
+        return $result;
+    }
+
+    /**
+     * Get 证书密钥文件
+     *
+     * @return string|null
+     */ 
+    public function getSslKeyFile()
+    {
+        return $this->sslKeyFile;
+    }
+
+    /**
+     * With 证书密钥文件
+     *
+     * @param string|null $sslKeyFile  证书密钥文件
+     *
+     * @return self
+     */ 
+    public function withSslKeyFile($sslKeyFile)
+    {
+        $result = clone $this;
+        $result->sslKeyFile = $sslKeyFile;
+
+        return $result;
+    }
+
+    /**
+     * Get 验证服务器端证书。
+     *
+     * @return bool
+     */ 
+    public function getSslVerifyPeer()
+    {
+        return $this->sslVerifyPeer;
+    }
+
+    /**
+     * With 验证服务器端证书。
+     *
+     * @param bool $sslVerifyPeer  验证服务器端证书。
+     *
+     * @return self
+     */ 
+    public function withSslVerifyPeer(bool $sslVerifyPeer)
+    {
+        $result = clone $this;
+        $result->sslVerifyPeer = $sslVerifyPeer;
+
+        return $result;
+    }
+
+    /**
+     * Get 允许自签名证书
+     *
+     * @return bool
+     */ 
+    public function getSslAllowSelfSigned()
+    {
+        return $this->sslAllowSelfSigned;
+    }
+
+    /**
+     * With 允许自签名证书
+     *
+     * @param bool $sslAllowSelfSigned  允许自签名证书
+     *
+     * @return self
+     */ 
+    public function withSslAllowSelfSigned(bool $sslAllowSelfSigned)
+    {
+        $result = clone $this;
+        $result->sslAllowSelfSigned = $sslAllowSelfSigned;
+
+        return $result;
+    }
+
+    /**
+     * Get 服务器主机名称
+     *
+     * @return string|null
+     */ 
+    public function getSslHostName()
+    {
+        return $this->sslHostName;
+    }
+
+    /**
+     * With 服务器主机名称
+     *
+     * @param string|null $sslHostName  服务器主机名称
+     *
+     * @return self
+     */ 
+    public function withSslHostName($sslHostName)
+    {
+        $result = clone $this;
+        $result->sslHostName = $sslHostName;
+
+        return $result;
+    }
+
+    /**
+     * Get cA 证书
+     *
+     * @return string|null
+     */ 
+    public function getSslCafile()
+    {
+        return $this->sslCafile;
+    }
+
+    /**
+     * With cA 证书
+     *
+     * @param string|null $sslCafile  CA 证书
+     *
+     * @return self
+     */ 
+    public function withSslCafile($sslCafile)
+    {
+        $result = clone $this;
+        $result->sslCafile = $sslCafile;
+
+        return $result;
+    }
+
+    /**
+     * Get 证书目录
+     *
+     * @return string|null
+     */ 
+    public function getSslCapath()
+    {
+        return $this->sslCapath;
+    }
+
+    /**
+     * With 证书目录
+     *
+     * @param string|null $sslCapath  证书目录
+     *
+     * @return self
+     */ 
+    public function withSslCapath($sslCapath)
+    {
+        $result = clone $this;
+        $result->sslCapath = $sslCapath;
 
         return $result;
     }
