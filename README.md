@@ -62,6 +62,11 @@ MQTT是一个基于客户端-服务器的消息发布/订阅传输协议。MQTT�
     'host'          =>    '127.0.0.1',
     'port'          =>    8081,
     'controller'    =>  \ImiApp\MQTTServer\Controller\MQTTController::class,
+    // 'configs'       =>    [
+    //     // 启用 MQTTS 配置证书
+    //     'ssl_cert_file'     =>  dirname(__DIR__) . '/ssl/server.crt',
+    //     'ssl_key_file'      =>  dirname(__DIR__) . '/ssl/server.key',
+    // ],
 ],
 ```
 
@@ -76,6 +81,11 @@ MQTT是一个基于客户端-服务器的消息发布/订阅传输协议。MQTT�
         'host'          =>    '127.0.0.1',
         'port'          =>    8081,
         'controller'    =>  \ImiApp\MQTTServer\Controller\MQTTController::class,
+        // 'configs'       =>    [
+        //     // 启用 MQTTS 配置证书
+        //     'ssl_cert_file'     =>  dirname(__DIR__) . '/ssl/server.crt',
+        //     'ssl_key_file'      =>  dirname(__DIR__) . '/ssl/server.key',
+        // ],
     ],
 ],
 ```
