@@ -29,9 +29,7 @@ class Server extends \Imi\Server\TcpServer\Server
     protected function createServer()
     {
         parent::createServer();
-        $this->swooleServer->set([
-            'open_mqtt_protocol'    =>  true,
-        ]);
+        $this->config['configs']['open_mqtt_protocol'] = true;
     }
 
     /**
@@ -41,8 +39,6 @@ class Server extends \Imi\Server\TcpServer\Server
     protected function createSubServer()
     {
         parent::createSubServer();
-        $this->swoolePort->set([
-            'open_mqtt_protocol'    =>  true,
-        ]);
+        $this->config['configs']['open_mqtt_protocol'] = true;
     }
 }
