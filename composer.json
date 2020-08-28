@@ -13,14 +13,14 @@
     },
     "autoload": {
         "psr-4" : {
-            "Imi\\MQTT\\" : "src/"
+            "Imi\\MQTT\\" : "src/",
+            "Imi\\Server\\MQTT\\": "src/imi/Server/MQTT/"
         }
     },
     "autoload-dev": {
         "psr-4" : {
             "ImiApp\\" : "example/",
-            "Imi\\MQTT\\Test\\" : "tests/",
-            "Imi\\Server\\MQTT\\": "src/imi/Server/MQTT/"
+            "Imi\\MQTT\\Test\\" : "tests/"
         }
     },
     "scripts": {
