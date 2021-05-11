@@ -53,13 +53,13 @@ function startServer()
     $callbacks = [];
     foreach ($servers as $name => $options)
     {
-        $callbacks[] = function () use ($options, $name) {
+        $callbacks[] = static function () use ($options, $name) {
             // start server
             $cmd = 'nohup ' . $options['start'] . ' > /dev/null 2>&1';
             echo "Starting {$name}...", \PHP_EOL;
             shell_exec($cmd);
 
-            register_shutdown_function(function () use ($name, $options) {
+            register_shutdown_function(static function () use ($name, $options) {
                 \Swoole\Runtime::enableCoroutine(false);
                 // stop server
                 $cmd = $options['stop'];
@@ -80,6 +80,9 @@ function startServer()
     }
 
     batch($callbacks, 120, max(swoole_cpu_num() - 1, 1));
+    register_shutdown_function(static function () {
+        checkPorts([8081, 8082]);
+    });
 }
 
 startServer();

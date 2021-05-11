@@ -23,7 +23,9 @@ use Imi\MQTT\Client\Contract\IMQTTClientListener;
 use Imi\MQTT\Client\Exception\ConnectException;
 use Imi\MQTT\Client\Exception\InvalidPacketTypeException;
 use Imi\MQTT\Client\Exception\SendException;
+use Imi\Swoole\Util\Swoole;
 use Imi\Timer\Timer;
+use Imi\Util\Imi;
 use Swoole\Coroutine\Client;
 
 class MQTTClient
@@ -92,7 +94,7 @@ class MQTTClient
         {
             $will = null;
         }
-        $connection = (new Connection($config['host'], $config['port'], $config['timeout'] ?? null, $config['pingTimespan'] ?? null, $config['username'] ?? '', $config['password'] ?? '', $will, $config['clientId'] ?? '', $config['keepAlive'] ?? 60, $config['protocol'] ?? 4, $config['clean'] ?? true))
+        $connection = (new Connection($config['host'], (int) $config['port'], isset($config['timeout']) ? (float) ($config['timeout']) : null, isset($config['pingTimespan']) ? (float) ($config['pingTimespan']) : null, $config['username'] ?? '', $config['password'] ?? '', $will, $config['clientId'] ?? '', (int) ($config['keepAlive'] ?? 60), (int) ($config['protocol'] ?? 4), (bool) ($config['clean'] ?? true)))
             ->withSsl($config['ssl'] ?? false)
             ->withSslCertFile($config['sslCertFile'] ?? null)
             ->withSslKeyFile($config['sslKeyFile'] ?? null)
@@ -101,15 +103,16 @@ class MQTTClient
             ->withSslHostName($config['sslHostName'] ?? null)
             ->withSslCafile($config['sslCafile'] ?? null)
             ->withSslCapath($config['sslCapath'] ?? null)
-            ;
+        ;
 
         $this->connection = $connection;
         $option = [
             'open_mqtt_protocol'    => true,
         ];
+        $type = Swoole::getTcpSockTypeByHost($config['host']);
         if ($connection->getSsl())
         {
-            $type = \SWOOLE_SOCK_TCP | \SWOOLE_SSL;
+            $type |= \SWOOLE_SSL;
             $option['ssl_cert_file'] = $connection->getSslCertFile();
             $option['ssl_key_file'] = $connection->getSslKeyFile();
             $option['ssl_verify_peer'] = $connection->getSslVerifyPeer();
@@ -117,10 +120,6 @@ class MQTTClient
             $option['ssl_host_name'] = $connection->getSslHostName();
             $option['ssl_ca_file'] = $connection->getSslCafile();
             $option['ssl_ca_path'] = $connection->getSslCapath();
-        }
-        else
-        {
-            $type = \SWOOLE_SOCK_TCP;
         }
         // Swoole 客户端对象
         $this->client = $client = new Client($type);
@@ -344,10 +343,7 @@ class MQTTClient
         }
         else
         {
-            $class = \get_class($packet);
-            $list = explode('\\', $class);
-            $classShortName = array_pop($list);
-            throw new SendException(sprintf('Send %s failed! error: [%s]%s', $classShortName, $client->errCode, $client->errMsg));
+            throw new SendException(sprintf('Send %s failed! error: [%s]%s', Imi::getClassShortName(\get_class($packet)), $client->errCode, $client->errMsg));
         }
     }
 
@@ -400,7 +396,7 @@ class MQTTClient
             {
                 throw new InvalidPacketTypeException(sprintf('Unsupport MQTT packet type %s', $packet->getPacketType()));
             }
-            $this->listener->$methodName($this, $packet);
+            $this->listener->{$methodName}($this, $packet);
         }
         if ($this->pingTimerId)
         {
