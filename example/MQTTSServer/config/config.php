@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'configs'    => [
     ],
@@ -8,12 +10,12 @@ return [
         'MQTTApp\MQTTServer\Controller',
     ],
     'beans'    => [
-        'ConnectContextStore'   => [
-            'handlerClass'  => 'ConnectContextRedis',
+        'ConnectionContextStore'   => [
+            'handlerClass'  => 'ConnectionContextRedis',
         ],
-        'ConnectContextRedis'    => [
+        'ConnectionContextRedis'    => [
             'redisPool' => 'redis',
-            'lockId'    => 'redisConnectContextLock',
+            'lockId'    => 'redisConnectionContextLock',
         ],
     ],
 ];

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Imi\MQTT\Client;
 
+use BinSoul\Net\Mqtt\DefaultPacketFactory;
 use BinSoul\Net\Mqtt\Packet;
 use BinSoul\Net\Mqtt\Packet\ConnectRequestPacket;
 use BinSoul\Net\Mqtt\Packet\ConnectResponsePacket;
@@ -27,48 +30,37 @@ class MQTTClient
 {
     /**
      * Swoole 协程客户端.
-     *
-     * @var \Swoole\Coroutine\Client
      */
-    private $client;
+    private Client $client;
 
     /**
      * 连接信息.
      *
      * @var \Imi\MQTT\Client\Connection
      */
-    private $connection;
+    private Connection $connection;
 
     /**
      * 事件监听器.
-     *
-     * @var \Imi\MQTT\Client\Contract\IMQTTClientListener
      */
-    private $listener;
+    private IMQTTClientListener $listener;
 
     /**
      * 已连接状态
-     *
-     * @var bool
      */
-    private $connected = false;
+    private bool $connected = false;
 
-    /**
-     * @var \BinSoul\Net\Mqtt\DefaultPacketFactory
-     */
-    private $packetFactory;
+    private DefaultPacketFactory $packetFactory;
 
     /**
      * Ping 定时器ID.
-     *
-     * @var int
      */
-    private $pingTimerId;
+    private ?int $pingTimerId = null;
 
     /**
      * 包类型集合.
      */
-    const PACKET_TYPE_MAP = [
+    public const PACKET_TYPE_MAP = [
         Packet::TYPE_CONNACK    => 'connectACK',
         Packet::TYPE_PUBLISH    => 'publish',
         Packet::TYPE_PUBACK     => 'publishAck',
@@ -145,8 +137,6 @@ class MQTTClient
 
     /**
      * Get swoole 协程客户端.
-     *
-     * @return \Swoole\Coroutine\Client
      */
     public function getClient(): Client
     {
@@ -165,18 +155,14 @@ class MQTTClient
 
     /**
      * Get 已连接状态
-     *
-     * @return bool
      */
-    public function getConnected()
+    public function getConnected(): bool
     {
         return $this->connected;
     }
 
     /**
      * 连接.
-     *
-     * @return bool
      */
     public function connect(): bool
     {
@@ -189,7 +175,7 @@ class MQTTClient
         // MQTT 连接
         $connectRequest = new ConnectRequestPacket();
         $connectRequest->setCleanSession($connection->isCleanSession());
-        $connectRequest->setClientID($connection->getClientID());
+        $connectRequest->setClientId($connection->getClientId());
         $connectRequest->setKeepAlive($connection->getKeepAlive());
         $connectRequest->setPassword($connection->getPassword());
         $connectRequest->setProtocolLevel($connection->getProtocol());
@@ -217,10 +203,8 @@ class MQTTClient
 
     /**
      * 断开连接.
-     *
-     * @return void
      */
-    public function disconnect()
+    public function disconnect(): void
     {
         if ($this->connected)
         {
@@ -247,13 +231,6 @@ class MQTTClient
     /**
      * 发布.
      *
-     * @param string   $topic
-     * @param string   $payload
-     * @param int      $qosLevel
-     * @param bool     $duplicate
-     * @param bool     $retained
-     * @param int|null $identifier
-     *
      * @return int|bool
      */
     public function publish(string $topic, string $payload, int $qosLevel = 0, bool $duplicate = false, bool $retained = false, ?int $identifier = null)
@@ -272,8 +249,6 @@ class MQTTClient
     /**
      * 发布确认.
      *
-     * @param int|null $identifier
-     *
      * @return int|bool
      */
     public function publishAck(?int $identifier = null)
@@ -286,8 +261,6 @@ class MQTTClient
 
     /**
      * 发布已收到（保证交付部分1）.
-     *
-     * @param int|null $identifier
      *
      * @return int|bool
      */
@@ -302,8 +275,6 @@ class MQTTClient
     /**
      * 发布释放（确保交付的第2部分）.
      *
-     * @param int|null $identifier
-     *
      * @return int|bool
      */
     public function publishRelease(?int $identifier = null)
@@ -317,8 +288,6 @@ class MQTTClient
     /**
      * 发布完成（保证交付的第3部分）.
      *
-     * @param int|null $identifier
-     *
      * @return int|bool
      */
     public function publishComplete(?int $identifier = null)
@@ -331,10 +300,6 @@ class MQTTClient
 
     /**
      * 订阅.
-     *
-     * @param string   $topic
-     * @param int      $qosLevel
-     * @param int|null $identifier
      *
      * @return int|bool
      */
@@ -351,9 +316,6 @@ class MQTTClient
     /**
      * 取消订阅.
      *
-     * @param array    $topics
-     * @param int|null $identifier
-     *
      * @return int|bool
      */
     public function unsubscribe(array $topics, ?int $identifier = null)
@@ -367,8 +329,6 @@ class MQTTClient
 
     /**
      * 发送包.
-     *
-     * @param \BinSoul\Net\Mqtt\Packet $packet
      *
      * @return int|bool
      */
@@ -393,8 +353,6 @@ class MQTTClient
 
     /**
      * 接收包.
-     *
-     * @return \BinSoul\Net\Mqtt\Packet|null
      */
     public function recv(): ?Packet
     {
@@ -422,15 +380,13 @@ class MQTTClient
 
     /**
      * 开始循环接收，直到关闭连接.
-     *
-     * @return void
      */
-    public function wait()
+    public function wait(): void
     {
         $pingTimespan = $this->connection->getPingTimespan();
         if ($pingTimespan > 0)
         {
-            $this->pingTimerId = Timer::tick($pingTimespan * 1000, [$this, 'ping']);
+            $this->pingTimerId = Timer::tick((int) ($pingTimespan * 1000), [$this, 'ping']);
         }
         while ($this->connected)
         {

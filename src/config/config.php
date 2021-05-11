@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'beanScan'  => [
-        'Imi\Server\MQTT\Listener',
-        'Imi\Server\MQTT\DataParser',
+        'Imi\Server\MQTT',
     ],
 ];

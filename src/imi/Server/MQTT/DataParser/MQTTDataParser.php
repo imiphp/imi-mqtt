@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Imi\Server\MQTT\DataParser;
 
+use BinSoul\Net\Mqtt\DefaultPacketFactory;
 use BinSoul\Net\Mqtt\PacketStream;
 use Imi\Aop\Annotation\Inject;
 use Imi\Server\DataParser\IParser;
@@ -11,19 +14,15 @@ class MQTTDataParser implements IParser
 {
     /**
      * @Inject(\BinSoul\Net\Mqtt\DefaultPacketFactory::class)
-     *
-     * @var \BinSoul\Net\Mqtt\DefaultPacketFactory
      */
-    protected $packetFactory;
+    protected DefaultPacketFactory $packetFactory;
 
     /**
      * 编码为存储格式.
      *
      * @param \BinSoul\Net\Mqtt\Packet $data
-     *
-     * @return mixed
      */
-    public function encode($data)
+    public function encode($data): string
     {
         $packageStream = new PacketStream();
         $data->write($packageStream);
@@ -34,11 +33,9 @@ class MQTTDataParser implements IParser
     /**
      * 解码为php变量.
      *
-     * @param string $data
-     *
      * @return \BinSoul\Net\Mqtt\Packet
      */
-    public function decode($data)
+    public function decode(string $data)
     {
         if (!isset($data[0]))
         {

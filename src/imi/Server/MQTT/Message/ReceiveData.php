@@ -1,47 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Imi\Server\MQTT\Message;
 
+use BinSoul\Net\Mqtt\Packet;
 use Imi\RequestContext;
 use Imi\Server\DataParser\DataParser;
+use Imi\Util\Socket\IPEndPoint;
 
 class ReceiveData implements IReceiveData
 {
     /**
      * 客户端连接的标识符.
      *
-     * @var int
+     * @var string|int
      */
-    protected $fd;
+    protected $clientId;
 
     /**
      * Reactor线程ID.
-     *
-     * @var int
      */
-    protected $reactorID;
+    protected int $reactorId;
 
     /**
      * 接收到的数据.
-     *
-     * @var string
      */
-    protected $data;
+    protected string $data;
 
     /**
      * 接收到的数据.
-     *
-     * @var \BinSoul\Net\Mqtt\Packet
      */
-    protected $formatData;
+    protected Packet $formatData;
 
     /**
-     * @param mixed $data
+     * 客户端地址
      */
-    public function __construct(int $fd, int $reactorID, $data)
+    protected IPEndPoint $clientAddress;
+
+    /**
+     * @param string|int $clientId
+     * @param mixed      $data
+     */
+    public function __construct($clientId, int $reactorId, $data)
     {
-        $this->fd = $fd;
-        $this->reactorID = $reactorID;
+        $this->clientId = $clientId;
+        $this->reactorId = $reactorId;
         $this->data = $data;
         $this->formatData = RequestContext::getServerBean(DataParser::class)->decode($data);
     }
@@ -49,19 +53,17 @@ class ReceiveData implements IReceiveData
     /**
      * 获取客户端的socket id.
      *
-     * @return int
+     * @return int|string
      */
-    public function getFd(): int
+    public function getClientId()
     {
-        return $this->fd;
+        return $this->clientId;
     }
 
     /**
      * 数据内容，可以是文本内容也可以是二进制数据，可以通过opcode的值来判断.
-     *
-     * @return string
      */
-    public function getData()
+    public function getData(): string
     {
         return $this->data;
     }
@@ -78,11 +80,22 @@ class ReceiveData implements IReceiveData
 
     /**
      * 获取Reactor线程ID.
-     *
-     * @return int
      */
-    public function getReactorID(): int
+    public function getReactorId(): int
     {
-        return $this->reactorID;
+        return $this->reactorId;
+    }
+
+    /**
+     * 获取客户端地址
+     */
+    public function getClientAddress(): IPEndPoint
+    {
+        if (!isset($this->clientAddress))
+        {
+            return $this->clientAddress = RequestContext::getServer()->getClientAddress($this->clientId);
+        }
+
+        return $this->clientAddress;
     }
 }

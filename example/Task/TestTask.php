@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MQTTApp\Task;
 
-use Imi\Task\Annotation\Task;
-use Imi\Task\Interfaces\ITaskHandler;
-use Imi\Task\TaskParam;
+use Imi\Swoole\Task\Annotation\Task;
+use Imi\Swoole\Task\Interfaces\ITaskHandler;
+use Imi\Swoole\Task\TaskParam;
 
 /**
  * @Task("Test1")
@@ -14,14 +16,9 @@ class TestTask implements ITaskHandler
     /**
      * 任务处理方法.
      *
-     * @param TaskParam      $param
-     * @param \Swoole\Server $server
-     * @param int            $taskID
-     * @param int            $workerID
-     *
      * @return mixed
      */
-    public function handle(TaskParam $param, \Swoole\Server $server, int $taskID, int $workerID)
+    public function handle(TaskParam $param, \Swoole\Server $server, int $taskId, int $workerId)
     {
         $data = $param->getData();
 
@@ -31,13 +28,9 @@ class TestTask implements ITaskHandler
     /**
      * 任务结束时触发.
      *
-     * @param \swoole_server $server
-     * @param int            $taskID
-     * @param mixed          $data
-     *
-     * @return void
+     * @param mixed $data
      */
-    public function finish(\Swoole\Server $server, int $taskID, $data)
+    public function finish(\Swoole\Server $server, int $taskId, $data): void
     {
     }
 }
