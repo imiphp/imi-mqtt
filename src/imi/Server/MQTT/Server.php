@@ -1,22 +1,23 @@
 <?php
+
 namespace Imi\Server\MQTT;
 
 /**
- * MQTT 服务器类
+ * MQTT 服务器类.
  */
 class Server extends \Imi\Server\TcpServer\Server
 {
     /**
-     * 构造方法
+     * 构造方法.
+     *
      * @param string $name
-     * @param array $config
-     * @param \Swoole\Server $serverInstance
-     * @param bool $subServer 是否为子服务器
+     * @param array  $config
+     * @param bool   $isSubServer 是否为子服务器
      */
     public function __construct($name, $config, $isSubServer = false)
     {
         parent::__construct($name, $config, $isSubServer);
-        if(!isset($this->config['dataParser']))
+        if (!isset($this->config['dataParser']))
         {
             $this->config['dataParser'] = \Imi\Server\MQTT\DataParser\MQTTDataParser::class;
         }
@@ -24,6 +25,7 @@ class Server extends \Imi\Server\TcpServer\Server
 
     /**
      * 创建 swoole 服务器对象
+     *
      * @return void
      */
     protected function createServer()
@@ -33,7 +35,8 @@ class Server extends \Imi\Server\TcpServer\Server
     }
 
     /**
-     * 从主服务器监听端口，作为子服务器
+     * 从主服务器监听端口，作为子服务器.
+     *
      * @return void
      */
     protected function createSubServer()
