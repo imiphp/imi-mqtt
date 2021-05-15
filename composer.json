@@ -7,30 +7,25 @@
         "binsoul/net-mqtt": "^0.8.0"
     },
     "require-dev": {
-        "yurunsoft/imi": "dev-dev",
-        "phpunit/phpunit": "^7",
-        "yurunsoft/ide-helper": "~1.0"
+        "yurunsoft/ide-helper": "~1.0",
+        "swoole/ide-helper": "^4.6"
     },
     "autoload": {
-        "psr-4" : {
-            "Imi\\MQTT\\" : "src/",
+        "psr-4": {
+            "Imi\\MQTT\\": "src/",
             "Imi\\Server\\MQTT\\": "src/imi/Server/MQTT/"
         }
     },
     "autoload-dev": {
-        "psr-4" : {
-            "ImiApp\\" : "example/",
-            "Imi\\MQTT\\Test\\" : "tests/"
+        "psr-4": {
+            "MQTTApp\\": "example/",
+            "Imi\\MQTT\\Test\\": "tests/"
         }
     },
-    "scripts": {
-      "test": "./tests/run",
-      "install-test": "php --ri swoole && composer install composer test"
-    },
+    "scripts": {},
     "extra": {
         "ide-helper": {
             "list": [
-                "swoole",
                 "redis"
             ]
         }

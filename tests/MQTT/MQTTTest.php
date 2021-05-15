@@ -1,4 +1,5 @@
 <?php
+
 namespace Imi\MQTT\Test;
 
 use BinSoul\Net\Mqtt\Packet;
@@ -7,38 +8,38 @@ use Swoole\Coroutine\Channel;
 
 class MQTTTest extends BaseTest
 {
-    public function testMQTT()
+    public function testMQTT(): void
     {
         $this->privateTest([
-            'host'          =>  '127.0.0.1',
-            'port'          =>  8081,
-            'timeout'       =>  60,
-            'pingTimespan'  =>  3,
-            'username'      =>  'root',
-            'password'      =>  '123456',
+            'host'          => '127.0.0.1',
+            'port'          => 8081,
+            'timeout'       => 60,
+            'pingTimespan'  => 3,
+            'username'      => 'root',
+            'password'      => '123456',
         ]);
     }
 
-    public function testMQTTS()
+    public function testMQTTS(): void
     {
         $this->privateTest([
-            'host'                  =>  '127.0.0.1',
-            'port'                  =>  8082,
-            'timeout'               =>  60,
-            'pingTimespan'          =>  3,
-            'username'              =>  'root',
-            'password'              =>  '123456',
-            'ssl'                   =>  true,
-            'sslAllowSelfSigned'    =>  true,
+            'host'                  => '127.0.0.1',
+            'port'                  => 8082,
+            'timeout'               => 60,
+            'pingTimespan'          => 3,
+            'username'              => 'root',
+            'password'              => '123456',
+            'ssl'                   => true,
+            'sslAllowSelfSigned'    => true,
         ]);
     }
 
-    private function privateTest($config)
+    private function privateTest(array $config): void
     {
-        $listener = new TestClientListener;
+        $listener = new TestClientListener();
         $initChannel = new Channel(1);
         $client = new MQTTClient($config, $listener);
-        go(function() use($initChannel, $client){
+        go(function () use ($initChannel, $client) {
             $this->assertTrue($client->connect());
             $initChannel->push(1);
             $client->wait();
@@ -53,7 +54,7 @@ class MQTTTest extends BaseTest
         $this->assertNotFalse($client->subscribe('a', 0));
         $this->assertNotFalse($client->unsubscribe(['a']));
         $this->assertEquals(2, $initChannel->pop(5));
-        
+
         // connectACK
         $r = $listener->getConnectACKResult();
         $this->assertNotNull($r);
@@ -63,23 +64,23 @@ class MQTTTest extends BaseTest
         $r = $listener->getPublishResults();
         $this->assertNotNull($r);
         $result = [
-            Packet::TYPE_PUBLISH    =>  false,
-            Packet::TYPE_PUBACK     =>  false,
-            Packet::TYPE_PUBREC     =>  false,
-            Packet::TYPE_PUBREL     =>  false,
-            Packet::TYPE_PUBCOMP    =>  false,
+            Packet::TYPE_PUBLISH    => false,
+            Packet::TYPE_PUBACK     => false,
+            Packet::TYPE_PUBREC     => false,
+            Packet::TYPE_PUBREL     => false,
+            Packet::TYPE_PUBCOMP    => false,
         ];
-        foreach($r as $item)
+        foreach ($r as $item)
         {
-            /** @var \BinSoul\Net\Mqtt\Packet\IdentifierOnlyPacket $item */
+            /* @var \BinSoul\Net\Mqtt\Packet\IdentifierOnlyPacket $item */
             $result[$item->getPacketType()] = true;
         }
         $this->assertEquals([
-            Packet::TYPE_PUBLISH    =>  true,
-            Packet::TYPE_PUBACK     =>  true,
-            Packet::TYPE_PUBREC     =>  true,
-            Packet::TYPE_PUBREL     =>  true,
-            Packet::TYPE_PUBCOMP    =>  true,
+            Packet::TYPE_PUBLISH    => true,
+            Packet::TYPE_PUBACK     => true,
+            Packet::TYPE_PUBREC     => true,
+            Packet::TYPE_PUBREL     => true,
+            Packet::TYPE_PUBCOMP    => true,
         ], $result);
 
         // subscribeACK

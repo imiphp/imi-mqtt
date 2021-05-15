@@ -1,4 +1,5 @@
 <?php
+
 namespace Imi\MQTT\Test;
 
 use Imi\MQTT\Client\Contract\IMQTTClientListener;
@@ -21,7 +22,7 @@ class TestClientListener implements IMQTTClientListener
     private $subscribeACKResult;
 
     /**
-     * @var \BinSoul\Net\Mqtt\Packet\UnSubscribeResponsePacket
+     * @var \BinSoul\Net\Mqtt\Packet\UnsubscribeResponsePacket
      */
     private $unsubscribeACKResult;
 
@@ -31,10 +32,11 @@ class TestClientListener implements IMQTTClientListener
     private $pingResult;
 
     /**
-     * 连接确认
+     * 连接确认.
      *
-     * @param \Imi\MQTT\Client\MQTTClient $client
+     * @param \Imi\MQTT\Client\MQTTClient                    $client
      * @param \BinSoul\Net\Mqtt\Packet\ConnectResponsePacket $packet
+     *
      * @return void
      */
     public function connectACK(\Imi\MQTT\Client\MQTTClient $client, \BinSoul\Net\Mqtt\Packet\ConnectResponsePacket $packet)
@@ -43,10 +45,11 @@ class TestClientListener implements IMQTTClientListener
     }
 
     /**
-     * 发布
+     * 发布.
      *
-     * @param \Imi\MQTT\Client\MQTTClient $client
+     * @param \Imi\MQTT\Client\MQTTClient                   $client
      * @param \BinSoul\Net\Mqtt\Packet\PublishRequestPacket $packet
+     *
      * @return void
      */
     public function publish(\Imi\MQTT\Client\MQTTClient $client, \BinSoul\Net\Mqtt\Packet\PublishRequestPacket $packet)
@@ -55,10 +58,11 @@ class TestClientListener implements IMQTTClientListener
     }
 
     /**
-     * 发布确认
+     * 发布确认.
      *
-     * @param \Imi\MQTT\Client\MQTTClient $client
+     * @param \Imi\MQTT\Client\MQTTClient               $client
      * @param \BinSoul\Net\Mqtt\Packet\PublishAckPacket $packet
+     *
      * @return void
      */
     public function publishAck(\Imi\MQTT\Client\MQTTClient $client, \BinSoul\Net\Mqtt\Packet\PublishAckPacket $packet)
@@ -67,10 +71,11 @@ class TestClientListener implements IMQTTClientListener
     }
 
     /**
-     * 发布已收到（保证交付部分1）
+     * 发布已收到（保证交付部分1）.
      *
-     * @param \Imi\MQTT\Client\MQTTClient $client
+     * @param \Imi\MQTT\Client\MQTTClient                    $client
      * @param \BinSoul\Net\Mqtt\Packet\PublishReceivedPacket $packet
+     *
      * @return void
      */
     public function publishReceived(\Imi\MQTT\Client\MQTTClient $client, \BinSoul\Net\Mqtt\Packet\PublishReceivedPacket $packet)
@@ -79,10 +84,11 @@ class TestClientListener implements IMQTTClientListener
     }
 
     /**
-     * 发布释放（确保交付的第2部分）
+     * 发布释放（确保交付的第2部分）.
      *
-     * @param \Imi\MQTT\Client\MQTTClient $client
+     * @param \Imi\MQTT\Client\MQTTClient                   $client
      * @param \BinSoul\Net\Mqtt\Packet\PublishReleasePacket $packet
+     *
      * @return void
      */
     public function publishRelease(\Imi\MQTT\Client\MQTTClient $client, \BinSoul\Net\Mqtt\Packet\PublishReleasePacket $packet)
@@ -91,10 +97,11 @@ class TestClientListener implements IMQTTClientListener
     }
 
     /**
-     * 发布完成（保证交付的第3部分）
+     * 发布完成（保证交付的第3部分）.
      *
-     * @param \Imi\MQTT\Client\MQTTClient $client
+     * @param \Imi\MQTT\Client\MQTTClient                    $client
      * @param \BinSoul\Net\Mqtt\Packet\PublishCompletePacket $packet
+     *
      * @return void
      */
     public function publishComplete(\Imi\MQTT\Client\MQTTClient $client, \BinSoul\Net\Mqtt\Packet\PublishCompletePacket $packet)
@@ -103,10 +110,11 @@ class TestClientListener implements IMQTTClientListener
     }
 
     /**
-     * 订阅确认
+     * 订阅确认.
      *
-     * @param \Imi\MQTT\Client\MQTTClient $client
+     * @param \Imi\MQTT\Client\MQTTClient                      $client
      * @param \BinSoul\Net\Mqtt\Packet\SubscribeResponsePacket $packet
+     *
      * @return void
      */
     public function subscribeACK(\Imi\MQTT\Client\MQTTClient $client, \BinSoul\Net\Mqtt\Packet\SubscribeResponsePacket $packet)
@@ -115,10 +123,11 @@ class TestClientListener implements IMQTTClientListener
     }
 
     /**
-     * 取消订阅确认
+     * 取消订阅确认.
      *
-     * @param \Imi\MQTT\Client\MQTTClient $client
+     * @param \Imi\MQTT\Client\MQTTClient                        $client
      * @param \BinSoul\Net\Mqtt\Packet\UnsubscribeResponsePacket $packet
+     *
      * @return void
      */
     public function unsubscribeACK(\Imi\MQTT\Client\MQTTClient $client, \BinSoul\Net\Mqtt\Packet\UnsubscribeResponsePacket $packet)
@@ -128,10 +137,11 @@ class TestClientListener implements IMQTTClientListener
     }
 
     /**
-     * Ping 响应
+     * Ping 响应.
      *
-     * @param \Imi\MQTT\Client\MQTTClient $client
+     * @param \Imi\MQTT\Client\MQTTClient                 $client
      * @param \BinSoul\Net\Mqtt\Packet\PingResponsePacket $packet
+     *
      * @return void
      */
     public function ping(\Imi\MQTT\Client\MQTTClient $client, \BinSoul\Net\Mqtt\Packet\PingResponsePacket $packet)
@@ -140,53 +150,52 @@ class TestClientListener implements IMQTTClientListener
     }
 
     /**
-     * Get the value of connectACKResult
+     * Get the value of connectACKResult.
      *
      * @return \BinSoul\Net\Mqtt\Packet\ConnectResponsePacket
-     */ 
+     */
     public function getConnectACKResult()
     {
         return $this->connectACKResult;
     }
 
     /**
-     * Get the value of subscribeACKResult
+     * Get the value of subscribeACKResult.
      *
      * @return \BinSoul\Net\Mqtt\Packet\SubscribeResponsePacket
-     */ 
+     */
     public function getSubscribeACKResult()
     {
         return $this->subscribeACKResult;
     }
 
     /**
-     * Get the value of unsubscribeACKResult
+     * Get the value of unsubscribeACKResult.
      *
-     * @return \BinSoul\Net\Mqtt\Packet\UnSubscribeResponsePacket
-     */ 
+     * @return \BinSoul\Net\Mqtt\Packet\UnsubscribeResponsePacket
+     */
     public function getUnsubscribeACKResult()
     {
         return $this->unsubscribeACKResult;
     }
 
     /**
-     * Get the value of pingResult
+     * Get the value of pingResult.
      *
      * @return \BinSoul\Net\Mqtt\Packet\PingResponsePacket
-     */ 
+     */
     public function getPingResult()
     {
         return $this->pingResult;
     }
 
     /**
-     * Get the value of publishResults
+     * Get the value of publishResults.
      *
      * @return array
-     */ 
+     */
     public function getPublishResults()
     {
         return $this->publishResults;
     }
-
 }
