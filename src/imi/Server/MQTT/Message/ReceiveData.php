@@ -1,40 +1,43 @@
 <?php
+
 namespace Imi\Server\MQTT\Message;
 
-use Imi\App;
 use Imi\RequestContext;
-use BinSoul\Net\Mqtt\PacketStream;
 use Imi\Server\DataParser\DataParser;
-use Imi\Server\MQTT\Exception\InvalidReceiveData;
 
 class ReceiveData implements IReceiveData
 {
     /**
-     * 客户端连接的标识符
+     * 客户端连接的标识符.
+     *
      * @var int
      */
     protected $fd;
 
     /**
-     * Reactor线程ID
+     * Reactor线程ID.
+     *
      * @var int
      */
     protected $reactorID;
 
     /**
-     * 接收到的数据
+     * 接收到的数据.
      *
      * @var string
      */
     protected $data;
 
     /**
-     * 接收到的数据
+     * 接收到的数据.
      *
      * @var \BinSoul\Net\Mqtt\Packet
      */
     protected $formatData;
 
+    /**
+     * @param mixed $data
+     */
     public function __construct(int $fd, int $reactorID, $data)
     {
         $this->fd = $fd;
@@ -44,7 +47,8 @@ class ReceiveData implements IReceiveData
     }
 
     /**
-     * 获取客户端的socket id
+     * 获取客户端的socket id.
+     *
      * @return int
      */
     public function getFd(): int
@@ -53,7 +57,8 @@ class ReceiveData implements IReceiveData
     }
 
     /**
-     * 数据内容，可以是文本内容也可以是二进制数据，可以通过opcode的值来判断
+     * 数据内容，可以是文本内容也可以是二进制数据，可以通过opcode的值来判断.
+     *
      * @return string
      */
     public function getData()
@@ -63,6 +68,7 @@ class ReceiveData implements IReceiveData
 
     /**
      * 获取格式化后的数据，一般是数组或对象
+     *
      * @return \BinSoul\Net\Mqtt\Packet
      */
     public function getFormatData()
@@ -71,7 +77,7 @@ class ReceiveData implements IReceiveData
     }
 
     /**
-     * 获取Reactor线程ID
+     * 获取Reactor线程ID.
      *
      * @return int
      */
@@ -79,5 +85,4 @@ class ReceiveData implements IReceiveData
     {
         return $this->reactorID;
     }
-
 }
