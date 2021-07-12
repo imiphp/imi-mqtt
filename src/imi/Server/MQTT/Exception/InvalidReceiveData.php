@@ -1,8 +1,9 @@
 <?php
+
 namespace Imi\Server\MQTT\Exception;
 
 /**
- * 非法的 MQTT 协议数据
+ * 非法的 MQTT 协议数据.
  */
 class InvalidReceiveData extends \InvalidArgumentException
 {
@@ -10,5 +11,4 @@ class InvalidReceiveData extends \InvalidArgumentException
     {
         parent::__construct($message, $code, $previous);
     }
-
 }

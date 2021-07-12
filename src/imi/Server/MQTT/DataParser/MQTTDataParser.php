@@ -1,8 +1,9 @@
 <?php
+
 namespace Imi\Server\MQTT\DataParser;
 
-use Imi\Aop\Annotation\Inject;
 use BinSoul\Net\Mqtt\PacketStream;
+use Imi\Aop\Annotation\Inject;
 use Imi\Server\DataParser\IParser;
 use Imi\Server\MQTT\Exception\InvalidReceiveData;
 
@@ -16,32 +17,37 @@ class MQTTDataParser implements IParser
     protected $packetFactory;
 
     /**
-     * 编码为存储格式
+     * 编码为存储格式.
+     *
      * @param \BinSoul\Net\Mqtt\Packet $data
+     *
      * @return mixed
      */
     public function encode($data)
     {
-        $packageStream = new PacketStream;
+        $packageStream = new PacketStream();
         $data->write($packageStream);
+
         return $packageStream->__toString();
     }
 
     /**
-     * 解码为php变量
+     * 解码为php变量.
+     *
      * @param string $data
+     *
      * @return \BinSoul\Net\Mqtt\Packet
      */
     public function decode($data)
     {
-        if(!isset($data[0]))
+        if (!isset($data[0]))
         {
-            throw new InvalidReceiveData;
+            throw new InvalidReceiveData();
         }
-        $type = ord($data[0]) >> 4;
+        $type = \ord($data[0]) >> 4;
         $packet = $this->packetFactory->build($type);
         $packet->read(new PacketStream($data));
+
         return $packet;
     }
-
 }
